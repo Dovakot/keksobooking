@@ -28,8 +28,8 @@ const FILE_FORMATS = [
   'image/jpeg',
 ];
 
-const DEFAULT_AVATAR = 'img/muffin-grey.svg';
-const DEFAULT_PHOTO = '#e4e4de';
+const DEFAULT_AVATAR_URL = 'img/muffin-grey.svg';
+const DEFAULT_PHOTO_COLOR = '#e4e4de';
 
 const priceList = {
   bungalow: 0,
@@ -165,15 +165,15 @@ const imageLoad = ({target}, show) => {
 
 const setAvatarPreview = (src) => {
   if (src) {
-    previewPhoto.style.background = `${DEFAULT_PHOTO} url('${src}') no-repeat center / cover`;
+    previewPhoto.style.background = `${DEFAULT_PHOTO_COLOR} url('${src}') no-repeat center / cover`;
 
     return;
   }
 
-  previewPhoto.style.background = `${DEFAULT_PHOTO}`;
+  previewPhoto.style.background = `${DEFAULT_PHOTO_COLOR}`;
 };
 
-const setPhotoPreview = (src = DEFAULT_AVATAR) => {
+const setPhotoPreview = (src = DEFAULT_AVATAR_URL) => {
   previewAvatar.src = src;
 };
 
