@@ -28,6 +28,9 @@ const FILE_FORMATS = [
   'image/jpeg',
 ];
 
+const DEFAULT_AVATAR_URL = 'img/muffin-grey.svg';
+const DEFAULT_PHOTO_COLOR = '#e4e4de';
+
 const priceList = {
   bungalow: 0,
   flat: 1000,
@@ -46,6 +49,8 @@ const fieldRoomNumber = adForm.querySelector('#room_number');
 const fieldCapacity = adForm.querySelector('#capacity');
 const fieldAvatar = adForm.querySelector('#avatar');
 const fieldPhoto = adForm.querySelector('#images');
+const previewAvatar = adForm.querySelector('.ad-form-header__preview img');
+const previewPhoto = adForm.querySelector('.ad-form__photo');
 
 const disableAdForm = () => {
   adForm.classList.add('ad-form--disabled');
@@ -64,8 +69,8 @@ const enableAdForm = () => {
 
   fieldRoomNumber.addEventListener('change', checkCapacityRooms);
   fieldCapacity.addEventListener('change', checkCapacityRooms);
-  fieldAvatar.addEventListener('change', checkFileType);
-  fieldPhoto.addEventListener('change', checkFileType);
+  fieldAvatar.addEventListener('change', (evt) => imageLoad(evt, setPhotoPreview));
+  fieldPhoto.addEventListener('change', (evt) => imageLoad(evt, setAvatarPreview));
 
   fieldType.addEventListener('change', () => {
     const price = priceList[fieldType.value];
@@ -118,6 +123,8 @@ const resetAdForm = () => {
 
   resetFilterForm();
   resetCoordsMainMarker();
+  setAvatarPreview();
+  setPhotoPreview();
 
   setTimeout(() => setAddress(INITIAL_COORDS));
 };
@@ -141,18 +148,33 @@ const checkCapacityRooms = () => {
   fieldRoomNumber.reportValidity();
 };
 
-const checkFileType = (evt) => {
-  const field = evt.target;
-  const type = field.files[0].type;
-  const flagType = FILE_FORMATS.includes(type);
+const imageLoad = ({target}, show) => {
+  const file = target.files[0];
+  const flagType = FILE_FORMATS.includes(file.type);
 
   if (flagType) {
-    field.setCustomValidity('');
-  } else {
-    field.setCustomValidity('Недопустимый формат файла');
+    const reader = new FileReader();
+
+    reader.addEventListener('load', () => {
+      show(reader.result);
+    });
+
+    reader.readAsDataURL(file);
+  }
+};
+
+const setAvatarPreview = (src) => {
+  if (src) {
+    previewPhoto.style.background = `${DEFAULT_PHOTO_COLOR} url('${src}') no-repeat center / cover`;
+
+    return;
   }
 
-  field.reportValidity();
+  previewPhoto.style.background = `${DEFAULT_PHOTO_COLOR}`;
+};
+
+const setPhotoPreview = (src = DEFAULT_AVATAR_URL) => {
+  previewAvatar.src = src;
 };
 
 export {
