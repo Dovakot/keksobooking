@@ -3,6 +3,13 @@ const ANY_OPTION = 'any';
 const LOW_PRICE = 10000;
 const HIGH_PRICE = 50000;
 
+const PriceOptions = {
+  LOW: 'low',
+  MIDDLE: 'middle',
+  HIGH: 'high',
+  ANY: ANY_OPTION,
+};
+
 const filterForm = document.querySelector('.map__filters');
 const filterChildren = filterForm.children;
 const fieldType = filterForm.querySelector('#housing-type');
@@ -41,13 +48,13 @@ const filterByPrice = (price) => {
   const selectedPrice = fieldPrice.value;
 
   switch (selectedPrice) {
-    case 'low':
+    case PriceOptions.LOW:
       return price < LOW_PRICE;
-    case 'middle':
+    case PriceOptions.MIDDLE:
       return price >= LOW_PRICE && price <= HIGH_PRICE;
-    case 'high':
+    case PriceOptions.HIGH:
       return price > HIGH_PRICE;
-    case ANY_OPTION:
+    case PriceOptions.ANY:
       return true;
     default:
       throw new Error(`Неизвестное значение: ${selectedPrice}`);
