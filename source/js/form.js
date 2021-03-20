@@ -70,6 +70,7 @@ const enableAdForm = () => {
   const onAdFormReset = resetAdForm;
   const onRoomNumberChange = checkCapacityRooms;
   const onCapacityChange = checkCapacityRooms;
+  const onTypeChange = setPrice;
   const onAvatarChange = (evt) => imageLoad(evt, setAvatarPreview);
   const onPhotoChange = (evt) => imageLoad(evt, setPhotoPreview);
 
@@ -77,13 +78,7 @@ const enableAdForm = () => {
   fieldCapacity.addEventListener('change', onCapacityChange);
   fieldAvatar.addEventListener('change', onAvatarChange);
   fieldPhoto.addEventListener('change', onPhotoChange);
-
-  fieldType.addEventListener('change', () => {
-    const price = priceList[fieldType.value];
-
-    fieldPrice.min = price;
-    fieldPrice.placeholder = price;
-  });
+  fieldType.addEventListener('change', onTypeChange);
 
   fieldTimein.addEventListener('change', () => {
     fieldTimeout.value = fieldTimein.value;
@@ -117,6 +112,13 @@ const setAddress = ({lat, lng}) => {
   fieldAddress.value = `${lat.toFixed(ADDRESS_DIGITS)}, ${lng.toFixed(ADDRESS_DIGITS)}`;
 };
 
+const setPrice = () => {
+  const price = priceList[fieldType.value];
+
+  fieldPrice.min = price;
+  fieldPrice.placeholder = price;
+};
+
 const submitAd = (name) => {
   showMessage(name);
   enableMapMainMarker();
@@ -132,7 +134,10 @@ const resetAdForm = () => {
   setAvatarPreview();
   setPhotoPreview();
 
-  setTimeout(() => setAddress(INITIAL_COORDS));
+  setTimeout(() => {
+    setAddress(INITIAL_COORDS);
+    setPrice();
+  });
 };
 
 const checkCapacityRooms = () => {
