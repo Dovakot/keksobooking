@@ -67,10 +67,16 @@ const enableAdForm = () => {
     fieldset.disabled = false;
   }
 
-  fieldRoomNumber.addEventListener('change', checkCapacityRooms);
-  fieldCapacity.addEventListener('change', checkCapacityRooms);
-  fieldAvatar.addEventListener('change', (evt) => imageLoad(evt, setPhotoPreview));
-  fieldPhoto.addEventListener('change', (evt) => imageLoad(evt, setAvatarPreview));
+  const onAdFormReset = resetAdForm;
+  const onRoomNumberChange = checkCapacityRooms;
+  const onCapacityChange = checkCapacityRooms;
+  const onAvatarChange = (evt) => imageLoad(evt, setAvatarPreview);
+  const onPhotoChange = (evt) => imageLoad(evt, setPhotoPreview);
+
+  fieldRoomNumber.addEventListener('change', onRoomNumberChange);
+  fieldCapacity.addEventListener('change', onCapacityChange);
+  fieldAvatar.addEventListener('change', onAvatarChange);
+  fieldPhoto.addEventListener('change', onPhotoChange);
 
   fieldType.addEventListener('change', () => {
     const price = priceList[fieldType.value];
@@ -104,7 +110,7 @@ const enableAdForm = () => {
     );
   });
 
-  adForm.addEventListener('reset', resetAdForm);
+  adForm.addEventListener('reset', onAdFormReset);
 };
 
 const setAddress = ({lat, lng}) => {
@@ -148,22 +154,24 @@ const checkCapacityRooms = () => {
   fieldRoomNumber.reportValidity();
 };
 
-const imageLoad = ({target}, show) => {
+const imageLoad = ({target}, onLoading) => {
   const file = target.files[0];
   const flagType = FILE_FORMATS.includes(file.type);
 
   if (flagType) {
     const reader = new FileReader();
 
-    reader.addEventListener('load', () => {
-      show(reader.result);
-    });
+    reader.addEventListener('load', () => onLoading(reader.result));
 
     reader.readAsDataURL(file);
   }
 };
 
-const setAvatarPreview = (src) => {
+const setAvatarPreview = (src = DEFAULT_AVATAR_URL) => {
+  previewAvatar.src = src;
+};
+
+const setPhotoPreview = (src) => {
   if (src) {
     previewPhoto.style.background = `${DEFAULT_PHOTO_COLOR} url('${src}') no-repeat center / cover`;
 
@@ -171,10 +179,6 @@ const setAvatarPreview = (src) => {
   }
 
   previewPhoto.style.background = `${DEFAULT_PHOTO_COLOR}`;
-};
-
-const setPhotoPreview = (src = DEFAULT_AVATAR_URL) => {
-  previewAvatar.src = src;
 };
 
 export {

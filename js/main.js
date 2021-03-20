@@ -31,13 +31,15 @@ addMapMainMarker();
 
 getAdsData(
   (data) => {
-    addMapMarkers(data.slice(0, AD_COUNT));
-
-    enableFilterForm(debounce(() => {
+    const refreshFilterForm = () => {
       removeMapMarkers();
 
       addMapMarkers(filterAds(data).slice(0, AD_COUNT));
-    }, RERENDER_DELAY));
+    };
+    const debounceRefreshFilterForm = debounce(refreshFilterForm, RERENDER_DELAY);
+
+    addMapMarkers(data.slice(0, AD_COUNT));
+    enableFilterForm(debounceRefreshFilterForm, debounceRefreshFilterForm);
   },
   () => showMessage(Templates.FAILED),
 );
