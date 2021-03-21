@@ -159,14 +159,14 @@ const checkCapacityRooms = () => {
   fieldRoomNumber.reportValidity();
 };
 
-const imageLoad = ({target}, onLoading) => {
+const imageLoad = ({target}, onLoad) => {
   const file = target.files[0];
   const flagType = FILE_FORMATS.includes(file.type);
 
   if (flagType) {
     const reader = new FileReader();
 
-    reader.addEventListener('load', () => onLoading(reader.result));
+    reader.addEventListener('load', () => onLoad(reader.result));
 
     reader.readAsDataURL(file);
   }

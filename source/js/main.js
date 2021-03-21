@@ -36,10 +36,10 @@ getAdsData(
 
       addMapMarkers(filterAds(data).slice(0, AD_COUNT));
     };
-    const debounceRefreshFilterForm = debounce(refreshFilterForm, RERENDER_DELAY);
+    const debouncedRefreshFilterForm = debounce(refreshFilterForm, RERENDER_DELAY);
 
     addMapMarkers(data.slice(0, AD_COUNT));
-    enableFilterForm(debounceRefreshFilterForm, debounceRefreshFilterForm);
+    enableFilterForm(debouncedRefreshFilterForm, debouncedRefreshFilterForm);
   },
   () => showMessage(Templates.FAILED),
 );
