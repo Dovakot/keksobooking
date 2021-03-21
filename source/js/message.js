@@ -17,7 +17,9 @@ const createMessage = (name) => {
     document.removeEventListener('keydown', onMessageEscKeydown);
   };
 
-  template.addEventListener('click', closeMessage);
+  const onMessageClick = closeMessage;
+
+  template.addEventListener('click', onMessageClick);
   document.addEventListener('keydown', onMessageEscKeydown);
 
   return template;

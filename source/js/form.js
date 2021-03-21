@@ -67,17 +67,18 @@ const enableAdForm = () => {
     fieldset.disabled = false;
   }
 
-  fieldRoomNumber.addEventListener('change', checkCapacityRooms);
-  fieldCapacity.addEventListener('change', checkCapacityRooms);
-  fieldAvatar.addEventListener('change', (evt) => imageLoad(evt, setPhotoPreview));
-  fieldPhoto.addEventListener('change', (evt) => imageLoad(evt, setAvatarPreview));
+  const onAdFormReset = resetAdForm;
+  const onRoomNumberChange = checkCapacityRooms;
+  const onCapacityChange = checkCapacityRooms;
+  const onTypeChange = setPrice;
+  const onAvatarChange = (evt) => imageLoad(evt, setAvatarPreview);
+  const onPhotoChange = (evt) => imageLoad(evt, setPhotoPreview);
 
-  fieldType.addEventListener('change', () => {
-    const price = priceList[fieldType.value];
-
-    fieldPrice.min = price;
-    fieldPrice.placeholder = price;
-  });
+  fieldRoomNumber.addEventListener('change', onRoomNumberChange);
+  fieldCapacity.addEventListener('change', onCapacityChange);
+  fieldAvatar.addEventListener('change', onAvatarChange);
+  fieldPhoto.addEventListener('change', onPhotoChange);
+  fieldType.addEventListener('change', onTypeChange);
 
   fieldTimein.addEventListener('change', () => {
     fieldTimeout.value = fieldTimein.value;
@@ -104,11 +105,18 @@ const enableAdForm = () => {
     );
   });
 
-  adForm.addEventListener('reset', resetAdForm);
+  adForm.addEventListener('reset', onAdFormReset);
 };
 
 const setAddress = ({lat, lng}) => {
   fieldAddress.value = `${lat.toFixed(ADDRESS_DIGITS)}, ${lng.toFixed(ADDRESS_DIGITS)}`;
+};
+
+const setPrice = () => {
+  const price = priceList[fieldType.value];
+
+  fieldPrice.min = price;
+  fieldPrice.placeholder = price;
 };
 
 const submitAd = (name) => {
@@ -126,7 +134,10 @@ const resetAdForm = () => {
   setAvatarPreview();
   setPhotoPreview();
 
-  setTimeout(() => setAddress(INITIAL_COORDS));
+  setTimeout(() => {
+    setAddress(INITIAL_COORDS);
+    setPrice();
+  });
 };
 
 const checkCapacityRooms = () => {
@@ -148,22 +159,24 @@ const checkCapacityRooms = () => {
   fieldRoomNumber.reportValidity();
 };
 
-const imageLoad = ({target}, show) => {
+const imageLoad = ({target}, onLoad) => {
   const file = target.files[0];
   const flagType = FILE_FORMATS.includes(file.type);
 
   if (flagType) {
     const reader = new FileReader();
 
-    reader.addEventListener('load', () => {
-      show(reader.result);
-    });
+    reader.addEventListener('load', () => onLoad(reader.result));
 
     reader.readAsDataURL(file);
   }
 };
 
-const setAvatarPreview = (src) => {
+const setAvatarPreview = (src = DEFAULT_AVATAR_URL) => {
+  previewAvatar.src = src;
+};
+
+const setPhotoPreview = (src) => {
   if (src) {
     previewPhoto.style.background = `${DEFAULT_PHOTO_COLOR} url('${src}') no-repeat center / cover`;
 
@@ -171,10 +184,6 @@ const setAvatarPreview = (src) => {
   }
 
   previewPhoto.style.background = `${DEFAULT_PHOTO_COLOR}`;
-};
-
-const setPhotoPreview = (src = DEFAULT_AVATAR_URL) => {
-  previewAvatar.src = src;
 };
 
 export {

@@ -57,7 +57,7 @@ const initializeMap = () => {
   L.tileLayer(MapSettings.URL, MapSettings.ATTR).addTo(map);
 };
 
-const setCoordsMainMarker = (evt) => {
+const onMainMarkerMoveend = (evt) => {
   const location = evt.target.getLatLng();
 
   setAddress(location);
@@ -68,13 +68,13 @@ const resetCoordsMainMarker = () => mainMarker.setLatLng(INITIAL_COORDS);
 const disableMapMainMarker = () => {
   mainMarker.dragging.disable();
 
-  mainMarker.off('moveend', setCoordsMainMarker);
+  mainMarker.off('moveend', onMainMarkerMoveend);
 };
 
 const enableMapMainMarker = () => {
   mainMarker.dragging.enable();
 
-  mainMarker.on('moveend', setCoordsMainMarker);
+  mainMarker.on('moveend', onMainMarkerMoveend);
 };
 
 const addMapMainMarker = () => {

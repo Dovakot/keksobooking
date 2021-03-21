@@ -26,15 +26,15 @@ const disableFilterForm = () => {
   }
 };
 
-const enableFilterForm = (refresh) => {
+const enableFilterForm = (onChange, onReset) => {
   filterForm.classList.remove('map__filters--disabled');
 
   for (let filter of filterChildren) {
     filter.disabled = false;
   }
 
-  filterForm.addEventListener('change', refresh);
-  filterForm.addEventListener('reset', refresh);
+  filterForm.addEventListener('change', onChange);
+  filterForm.addEventListener('reset', onReset);
 };
 
 const resetFilterForm = () => filterForm.reset();
